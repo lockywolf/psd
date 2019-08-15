@@ -146,6 +146,8 @@
 ;;; date and time created 92/05/27 10:32:31 by pk
 ;;; 
 
+; TAG:TODO:BEGIN:Make defcustom:END
+; TAG:TODO:BEGIN:Which part of slib do we need?:END
 ;; Where psd resides. Edit this to suit your installation.  Not needed
 ;; for SLIB installation.
 (defvar psd-directory "/home/kaarne-b/pk/psd/"
@@ -165,7 +167,7 @@ if that fails, it will load the file psd.scm.")
 (require 'cmuscheme)
 (provide 'psd)
 
-;; Add psd into the minor modes.
+;; Add psd into the minor modes. TAG:TODO:BEGIN:Change to defcustom:END
 (defvar psd-mode nil "Indicator for psd-mode")
 
 (or (assq 'psd-mode minor-mode-alist)
@@ -173,8 +175,8 @@ if that fails, it will load the file psd.scm.")
 	  (cons '(psd-mode " Psd") minor-mode-alist)))
 
 ;; The temporary files that are used for sending stuff to psd.
-(defvar *psd-tmp-source-file* (make-temp-name "/tmp/psd1"))
-(defvar *psd-tmp-target-file* (make-temp-name "/tmp/psd2"))
+(defvar *psd-tmp-source-file* (make-temp-name "/tmp/psd1")) ; TAG:TODO:BEGIN:Give a truly random name:END
+(defvar *psd-tmp-target-file* (make-temp-name "/tmp/psd2")) ; TAG:TODO:BEGIN:Give a truly random name:END
 
 (defun psd-mode (&optional arg)
   "Toggle psd-mode, with argument turn on psd-mode.
@@ -224,6 +226,7 @@ into its initial state."
     (setq psd-filter-accumulator nil)
     (make-local-variable 'psd-last-frame)
     (setq psd-last-frame nil)
+    ; TAG:TODO:BEGIN:replace with (kdb):END
     (local-set-key "\C-cd" 'psd-debug-file)
     (define-key scheme-mode-map "\M-\C-x" 'scheme-or-psd-send-definition);gnu convention
     (define-key scheme-mode-map "\C-ce"    'scheme-or-psd-send-definition)
@@ -239,6 +242,12 @@ into its initial state."
     (send-string
      "scheme"
      (if  psd-using-slib
+	 ;; TAG:TODO:BEGIN:somewhere around this place we
+	 ;; probably need to add a check for "provided feature
+	 ;; In particular, perhaps we need to implement the
+	 ;; psd-r7rs.sld which would do the same things as
+	 ;; what slib's library system does:
+	 ;; (import (psd-r7rs))":END
 	 "(require 'portable-scheme-debugger)"
 ;;;	 "(load (in-vicinity (sub-vicinity (library-vicinity) \"psd\")
 ;;;			    \"psd-slib\"

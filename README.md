@@ -40,19 +40,19 @@ Files in the distribution:
 
 * psd.el			psd minor mode for Emacs
 
-* psd.scm		the generic main file that takes care of loading psd
-* psd-slib.scm		main file to be used with slib
-* psd-scm.scm    	ditto for scm without slib (you should really get slib)
-* psd-sci.scm		ditto for sci (tested with version 28sep90jfb)
+* psd.scm		the generic main file that takes care of loading psd (2019-08-14: not found)
+* psd-slib.scm		main file to be used with slib (2019-08-14: requires 'portable-scheme-debugger feature, provided by slib 3b5)
+* psd-scm.scm    	ditto for scm without slib (you should really get slib) (2019-08-14: not found)
+* psd-sci.scm		ditto for sci (tested with version 28sep90jfb) (2019-08-14: not found)
 * instrum.scm		the instrumentation code
 * pexpr.scm		definition of pexps, which are sexps with position information 
 * read.scm		the reader for psd
 * runtime.scm		runtime support for debugging
 * primitives.scm 	runtime support that has to know about primitive procedures 
 * version.scm    	announces the psd version
-* qp.scm	        	print any Scheme object in one line, truncating if necessary. Normally this comes from slib.
-* cmuscheme.el		the CMU Scheme mode for GNU Emacs by Olin Shivers. 
-* comint.el		support for cmuscheme.el
+* qp.scm	        	print any Scheme object in one line, truncating if necessary. Normally this comes from slib. (2019-08-14: not found, available in slib 3b5. Probably need to add to requirements)
+* cmuscheme.el		the CMU Scheme mode for GNU Emacs by Olin Shivers. (2019-08-14: available, but probably needs to be removed due to being shipped with Emacs)
+* comint.el		support for cmuscheme.el (2019-08-14: needs to be removed due to being shipped with Emacs)
 
 Comments, suggestions and bug reports are welcome.
 
