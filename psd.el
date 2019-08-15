@@ -146,20 +146,21 @@
 ;;; date and time created 92/05/27 10:32:31 by pk
 ;;; 
 
-; TAG:TODO:BEGIN:Make defcustom:END
-; TAG:TODO:BEGIN:Which part of slib do we need?:END
+; TAG:TODO:Make defcustom:END
+; TAG:TODO:Which part of slib do we need?:END
 ;; Where psd resides. Edit this to suit your installation.  Not needed
 ;; for SLIB installation.
 (defvar psd-directory "/home/kaarne-b/pk/psd/"
   "Path of the directory that contains psd.")
 
-(defvar psd-using-slib t
+(defcustom psd-using-slib t 
   "*If you are using slib set this to true. All
 the differences between implementations should be handled by
 slib. If this is set to true, psd will load the file
 psd-slib.scm. If it is set to nil, psd will try first to find a file
 psd-foo.scm, where foo is the name of your Scheme interpreter, and
-if that fails, it will load the file psd.scm.")
+if that fails, it will load the file psd.scm."
+  :group 'psd :type '(choice (const :tag "True" t) (const :tag "False" nil)))
 
 (defvar psd-mode-hook '()
   "Hook to run upon entering psd-mode")
@@ -175,10 +176,10 @@ if that fails, it will load the file psd.scm.")
 	  (cons '(psd-mode " Psd") minor-mode-alist)))
 
 ;; The temporary files that are used for sending stuff to psd.
-(defvar *psd-tmp-source-file* (make-temp-name "/tmp/psd1")) ; TAG:TODO:BEGIN:Give a truly random name:END
-(defvar *psd-tmp-target-file* (make-temp-name "/tmp/psd2")) ; TAG:TODO:BEGIN:Give a truly random name:END
+(defvar *psd-tmp-source-file* (make-temp-name "/tmp/psd1")) ; TAG:TODO:Give a truly random name:END
+(defvar *psd-tmp-target-file* (make-temp-name "/tmp/psd2")) ; TAG:TODO:Give a truly random name:END
 
-(defun psd-mode (&optional arg)
+(defun psd-mode (&optional arg) ;; TAG:TODO:Replace this with (define-minor-mode):END
   "Toggle psd-mode, with argument turn on psd-mode.
 
 Psd-mode is a minor mode for interacting with a psd running in an
@@ -226,7 +227,7 @@ into its initial state."
     (setq psd-filter-accumulator nil)
     (make-local-variable 'psd-last-frame)
     (setq psd-last-frame nil)
-    ; TAG:TODO:BEGIN:replace with (kdb):END
+    ; TAG:TODO:replace with (kdb):END
     (local-set-key "\C-cd" 'psd-debug-file)
     (define-key scheme-mode-map "\M-\C-x" 'scheme-or-psd-send-definition);gnu convention
     (define-key scheme-mode-map "\C-ce"    'scheme-or-psd-send-definition)
@@ -241,18 +242,19 @@ into its initial state."
 			  'psd-sentinel)
     (send-string
      "scheme"
-     (if  psd-using-slib
-	 ;; TAG:TODO:BEGIN:somewhere around this place we
+     (pcase psd-using-slib
+	 ;; TAG:TODO:somewhere around this place we
 	 ;; probably need to add a check for "provided feature
 	 ;; In particular, perhaps we need to implement the
 	 ;; psd-r7rs.sld which would do the same things as
 	 ;; what slib's library system does:
 	 ;; (import (psd-r7rs))":END
-	 "(require 'portable-scheme-debugger)"
+	 ('t "(require 'portable-scheme-debugger)")
 ;;;	 "(load (in-vicinity (sub-vicinity (library-vicinity) \"psd\")
 ;;;			    \"psd-slib\"
 ;;;			    (scheme-file-suffix)))"
-	 (concat "(begin "
+	 ('r7rs "(import (psd-r7rs))")
+	 ('nil (concat "(begin "
 		 "(define psd-directory \""
 		 psd-directory
 			 
@@ -266,7 +268,7 @@ into its initial state."
 		   (cond ((file-exists-p implementation-file)
 			  implementation-file)
 			 (t default-file)))
-		 "\"\) 'psd-mode-initialized)\n")))
+		 "\"\) 'psd-mode-initialized)\n"))))
     (run-hooks 'psd-mode-hook)))
 
 
